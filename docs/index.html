@@ -164,6 +164,7 @@
           document.querySelector('#out').href = `?zoom=${Number(q.zoom[0])-1}&lat=${q.lat[0]}&lng=${q.lng[0]}`;
         });
 
+        // don't allow clicks on map
         map.addListener('click', (e) => e.stop());
       }
     </script>
