@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 400px;
+        width: 400px;
+      }
+      #map, #map * {
+        cursor: default !important;
+      }
+
+      :root {
+        --col: black;
+        --bg: #eee;
+        --btn: #ccf;
+        --btnbg: #337;
+      }
+      @media screen and (prefers-color-scheme: dark) {
+        :root {
+          --col: #eee;
+          --bg: black;
+        }
+      }
+
+      html {
+        color: var(--col);
+        background-color: var(--bg);
+      }
+
+      a.nav {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--btn);
+        background-color: var(--btnbg);
+        text-decoration: none;
+      }
+      a.nav:hover {
+        color: var(--btnbg);
+        background-color: var(--btn);
+      }
+
+      main {
+        --w: 3rem;
+        display: inline-grid;
+        grid-template-areas:
+          "nw n ne . out"
+          "w map e . out"
+          "w map e . ."
+          "w map e . in"
+          "w map e . in"
+          "w map e . ."
+          "sw s se . .";
+        grid-template-columns: var(--w) auto var(--w) 1rem var(--w);
+        grid-template-rows: var(--w) var(--w) 1rem var(--w) var(--w) auto var(--w);
+      }
+
+      #map { grid-area: map; }
+      #N { grid-area: n; }
+      #S { grid-area: s; }
+      #E { grid-area: e; }
+      #W { grid-area: w; }
+      #NW { grid-area: nw; }
+      #NE { grid-area: ne; }
+      #SW { grid-area: sw; }
+      #SE { grid-area: se; }
+      #in { grid-area: in; }
+      #out { grid-area: out; }
+
+    </style>
+  </head>
+  <body>
+
+    <main>
+      <div id="map"></div>
+      <a class="nav" id="E">E</a>
+      <a class="nav" id="W">W</a>
+      <a class="nav" id="S">S</a>
+      <a class="nav" id="N">N</a>
+      <a class="nav" id="NE">NE</a>
+      <a class="nav" id="NW">NW</a>
+      <a class="nav" id="SE">SE</a>
+      <a class="nav" id="SW">SW</a>
+      <a class="nav" id="in">+</a>
+      <a class="nav" id="out">-</a>
+    </main>
+
+    <script>
+      // query parsing functions, adapted from stackoverflow
+      let parseQueryParams;
+      (function() {
+          'use strict';
+
+          var q;
+
+          parseQueryParams = function() {
+              if (q != null) {
+                  return q;
+              }
+
+              q = location.search.substring(1).replace(/\+/g, ' ');
+
+              /* parse the query */
+              var x = q.replace(/;/g, '&').split('&'), i, name, t;
+              /* q changes from string version of query to object */
+              for (q={}, i=0; i<x.length; i++) {
+                  t = x[i].split('=', 2);
+                  name = decodeURIComponent(t[0]);
+                  if (!q[name])
+                      q[name] = [];
+                  if (t.length > 1) {
+                      q[name][q[name].length] = decodeURIComponent(t[1]);
+                  }
+                  /* next two lines are nonstandard */
+                  else
+                      q[name][q[name].length] = true;
+              }
+              return q;
+          }
+      })();
+
+      // adding the map
+      let map;
+      function initMap() {
+        const q = Object.assign({
+          zoom: [8],
+          lat: [51],
+          lng: [-1],
+        }, parseQueryParams());
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {
+            lat: Number(q.lat[0]),
+            lng: Number(q.lng[0])
+          },
+          zoom: Number(q.zoom[0]),
+          disableDefaultUI: true,
+          gestureHandling: 'none',
+        });
+
+        map.addListener('bounds_changed', () => {
+          const maxLat= map.getBounds().getNorthEast().lat();
+          const minLat= map.getBounds().getSouthWest().lat();
+          const maxLng= map.getBounds().getNorthEast().lng();
+          const minLng= map.getBounds().getSouthWest().lng();
+
+          document.querySelector('#E').href = `?zoom=${q.zoom[0]}&lat=${q.lat[0]}&lng=${maxLng}`;
+          document.querySelector('#W').href = `?zoom=${q.zoom[0]}&lat=${q.lat[0]}&lng=${minLng}`;
+          document.querySelector('#N').href = `?zoom=${q.zoom[0]}&lat=${maxLat}&lng=${q.lng[0]}`;
+          document.querySelector('#S').href = `?zoom=${q.zoom[0]}&lat=${minLat}&lng=${q.lng[0]}`;
+
+          document.querySelector('#NE').href = `?zoom=${q.zoom[0]}&lat=${maxLat}&lng=${maxLng}`;
+          document.querySelector('#NW').href = `?zoom=${q.zoom[0]}&lat=${maxLat}&lng=${minLng}`;
+          document.querySelector('#SE').href = `?zoom=${q.zoom[0]}&lat=${minLat}&lng=${maxLng}`;
+          document.querySelector('#SW').href = `?zoom=${q.zoom[0]}&lat=${minLat}&lng=${minLng}`;
+
+          document.querySelector('#in').href = `?zoom=${Number(q.zoom[0])+1}&lat=${q.lat[0]}&lng=${q.lng[0]}`;
+          document.querySelector('#out').href = `?zoom=${Number(q.zoom[0])-1}&lat=${q.lat[0]}&lng=${q.lng[0]}`;
+        });
+
+        map.addListener('click', (e) => e.stop());
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTM1R_YOrBRUU09N7DvqPIz3kIUF1uf1Y&callback=initMap"
+    async defer></script>
+  </body>
+</html>

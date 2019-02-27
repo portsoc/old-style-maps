@@ -1,0 +1,13 @@
+{
+  "name": "old-style-maps",
+  "version": "1.0.0",
+  "description": "a simple web service that uses Google Maps to simulate an old-style map web app",
+  "scripts": {
+    "start": "./node_modules/.bin/http-server webpages"
+  },
+  "author": "Jacek Kopecky <jacek@jacek.cz>",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^0.11.1"
+  }
+}
