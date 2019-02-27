@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "a simple web service that uses Google Maps to simulate an old-style map web app",
   "scripts": {
-    "start": "./node_modules/.bin/http-server webpages"
+    "start": "./node_modules/.bin/http-server docs"
   },
   "author": "Jacek Kopecky <jacek@jacek.cz>",
   "license": "ISC",
