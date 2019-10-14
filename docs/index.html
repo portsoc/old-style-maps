@@ -73,9 +73,13 @@
       #in { grid-area: in; }
       #out { grid-area: out; }
 
+      .hidden {
+        opacity: 0;
+      }
+
     </style>
   </head>
-  <body>
+  <body class="hidden">
 
     <main>
       <div id="map"></div>
@@ -167,8 +171,20 @@
         // don't allow clicks on map
         map.addListener('click', (e) => e.stop());
       }
+
+      window.addEventListener('load', delayedLoad);
+      function delayedLoad() {
+        setTimeout(viewBody, 1000);
+        setTimeout(addMapScript, 2000);
+      }
+      function viewBody() {
+        document.body.classList.remove('hidden');
+      }
+      function addMapScript() {
+        const s = document.createElement('script');
+        s.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBTM1R_YOrBRUU09N7DvqPIz3kIUF1uf1Y&callback=initMap";
+        document.body.appendChild(s);
+      }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTM1R_YOrBRUU09N7DvqPIz3kIUF1uf1Y&callback=initMap"
-    async defer></script>
   </body>
 </html>
