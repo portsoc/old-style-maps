@@ -7,7 +7,7 @@
   },
   "author": "Jacek Kopecky <jacek@jacek.cz>",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "http-server": "^0.11.1"
   }
 }
