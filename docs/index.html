@@ -4,6 +4,7 @@
     <title>Simple Map</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Hepta+Slab:700&display=swap" rel="stylesheet">
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
@@ -33,6 +34,10 @@
         background-color: var(--bg);
       }
 
+      h1 {
+        font-family: 'Hepta Slab', serif;
+      }
+
       a.nav {
         display: inline-flex;
         align-items: center;
@@ -50,6 +55,7 @@
         --w: 3rem;
         display: inline-grid;
         grid-template-areas:
+          "title title title . ."
           "nw n ne . out"
           "w map e . out"
           "w map e . ."
@@ -58,7 +64,7 @@
           "w map e . ."
           "sw s se . .";
         grid-template-columns: var(--w) auto var(--w) 1rem var(--w);
-        grid-template-rows: var(--w) var(--w) 1rem var(--w) var(--w) auto var(--w);
+        grid-template-rows: auto var(--w) var(--w) 1rem var(--w) var(--w) auto var(--w);
       }
 
       #map { grid-area: map; }
@@ -73,6 +79,11 @@
       #in { grid-area: in; }
       #out { grid-area: out; }
 
+      main > h1 {
+        grid-area: title;
+        text-align: center;
+      }
+
       .hidden {
         opacity: 0;
       }
@@ -82,6 +93,8 @@
   <body class="hidden">
 
     <main>
+      <h1>Old-Style Maps</h1>
+
       <div id="map"></div>
       <a class="nav" id="E">E</a>
       <a class="nav" id="W">W</a>
